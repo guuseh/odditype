@@ -305,21 +305,35 @@
       <h3>Contact</h3>
       Guus Hoeberechts<br>
       (<a href="https://guushoeberechts.nl" target="_blank">website</a>)
-      (<a href="mailto:guus-99@live.nl">email</a>) 
+      (<a href="" id="contact">email</a>)
       (<a href="https://www.instagram.com/guus.eh/" target="_blank">instagram</a>)
+
+      <br><br>
+      <h3>How</h3>
+      The randomiser works by going over all the points of the individual glyphs and adding a random number between 0 and your given value to the coordinates.
+      The higher the value you pick, the more discrepancy there will be between the points and thus the more randomness. 
+      Going into the negatives will result in weird overlaps in the glyphs, making them look interesting, but ultimately not functional as a real font.
+      <br><br>
+      For more info, you can check out the 
+      (<a href="https://github.com/guuseh/odditype" target="_blank">github repository</a>), where you can find a README with more detailed information, or try the code for yourself.
     </div>
 
     <div class="glyphs">
     <div id="glyphs"></div>
     </div>
-  
-
-
-    
 
   </div>
 
     </div>
     <script src="fromfont.js" async></script>
+
+    <script type="text/javascript">
+
+      var encEmail = "Z3V1cy05OUBsaXZlLm5s";
+      const form = document.getElementById("contact");
+      form.setAttribute("href", "mailto:".concat(atob(encEmail)));
+      
+    </script>
+
   </body>
 </html>
