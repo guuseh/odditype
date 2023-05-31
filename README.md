@@ -6,3 +6,5 @@ The randomiser works by going over all the points of the individual glyphs and a
 
 The application is built using the opentype.js library. Everytime the randomiser is changed, the program cycles through the glyphs and adds a random number to each point.
 This works by extracting the svg path from the glyph, cycling through the path commands and adding the random value to every number it comes across. Then it is rebuilt into a glyph from the newly created svg path, and added into the array of new glyphs which is then formed into a typeface using the opentype.js library. 
+
+This application was built for the Type & Written Language studio course at Aalto University, 2023.
