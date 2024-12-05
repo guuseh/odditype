@@ -1,5 +1,4 @@
 
-
 // first function before there are any canvases 
 function createGlyphCanvas(glyph, size) {
     const canvasId = 'c' + glyph.index;
@@ -293,6 +292,9 @@ async function drawText (ai) {
     c.width = r.width * scale;
     c.height = r.height * scale;
     var prectx = c.getContext('2d');
+    prectx.fillStyle = "white";
+    prectx.fillRect(0,0, c.width, c.height);
+    prectx.fillStyle = "black"
     prectx.scale(scale, scale);
     
     writeFont.draw(prectx, gPreviewText, 10, 50, 40, {kerning: false}); 
@@ -329,32 +331,25 @@ function printText(){
     var printWin = window.open('','','width=300,height=auto');
     printWin.document.open();
     printWin.document.write(windowContent);
-    // printWin.document.close();
+    printWin.document.close();
     printWin.focus();
     printWin.print();
-    // setTimeout(() => { printWin.close(); }, 10);
+    setTimeout(() => { printWin.close(); }, 10);
     //printJS({printable:'typewriter', type:'html', maxWidth: 4000});
 
 }
 
 function saveText(){
+    // svg = printpath.toSVG({flipY: false});
     var canvas = document.getElementById("typewriter");
-    var img = canvas.toDataURL("image/png");
+    var img = canvas.toDataURL("image/jpeg", 1.0);
     var downloadLink = document.createElement("a");
     downloadLink.href = img;
-    downloadLink.download = "mymessage_odditype.png";
+    downloadLink.download = "mymessage_odditype.jpeg";
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
     
-    // var windowContent = '<!DOCTYPE html>';
-    // windowContent += '<html>'
-    // windowContent += '<head><title>Print canvas</title></head>';
-    // windowContent += '<body style="margin: 0;">'
-    // windowContent += '<img src="' + img + '"/>'
-    // // windowContent += '<img src="' + url + '" style="transform-origin: bottom left; transform: rotate(90.000001deg) translate(-80px, 0) scale(2.5); image-rendering: pixelated">';
-    // windowContent += '</body>';
-    // windowContent += '</html>';
     
 }
 
