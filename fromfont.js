@@ -329,7 +329,7 @@ function printText(){
     var printWin = window.open('','','width=300,height=auto');
     printWin.document.open();
     printWin.document.write(windowContent);
-    printWin.document.close();
+    // printWin.document.close();
     printWin.focus();
     printWin.print();
     // setTimeout(() => { printWin.close(); }, 10);
