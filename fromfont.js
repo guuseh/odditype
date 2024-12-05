@@ -332,7 +332,7 @@ function printText(){
     printWin.document.close();
     printWin.focus();
     printWin.print();
-    setTimeout(() => { printWin.close(); }, 10);
+    // setTimeout(() => { printWin.close(); }, 10);
     //printJS({printable:'typewriter', type:'html', maxWidth: 4000});
 
 }
