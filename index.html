@@ -124,14 +124,14 @@
         border-radius: 10px;
         padding-left: 0.5rem;
       }
-      #print-button{
-        border-radius: 10px;
+      .print-button{
+        /* border-radius: 10px; */
         font-family: 'craftworkreg';
-        font-size: 1.2rem;
+        font-size: 1.2rem !important;
         background-color: #0000FF;
         color: white;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
         display: inline-block;
       }
       #save-button{
@@ -145,16 +145,7 @@
         /* width: min-content; */
         display: inline-block;
       }
-      #email-button{
-        border-radius: 10px;
-        font-family: 'craftworkreg';
-        font-size: 1.2rem;
-        background-color: #0000FF;
-        color: white;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        display: inline-block;
-      }
+      
       .slidecontainer{
         grid-area: fontinput;
       }
@@ -293,7 +284,56 @@
         flex-wrap: wrap;
         gap: 5px;
       }
-   
+      #email-popup{
+        position: fixed;
+        top: 50vh;
+        left: 50vw;
+        width: 400px;
+        transform: translate(-50%,-50%) scale(0);
+        background-color: #F4F5FF;
+        padding: 2rem;
+        font-size: 1.5rem;
+        box-shadow: 0 0 300px 200px #00007e77;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+      }
+      #email-send{
+        border-radius: 10px;
+        font-family: 'craftworkreg';
+        font-size: 1.2rem;
+        background-color: #0000FF;
+        color: white;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        display: inline-block;
+        cursor: pointer;
+        width: fit-content;
+        margin-top: 10px;
+      }
+      #email-form{
+        display: flex;
+        gap: 5px;
+        width: 100%;
+        /* justify-content: stretch; */
+        flex-direction: column;
+        align-items: center;
+      }
+      #email-input, #fontname-input{
+        width: 100%;
+        font-size: 1.2rem;
+      }
+      #cancel-email{
+        width: fit-content;
+        align-self: center;
+        background-color: #4c4c4c;
+      }
+      .labelform{
+        font-size: 0.8rem;
+        color: #0000FF;
+        margin: 0;
+        align-self: start;
+      }
       /* @media print and (width: 8cm) and (height: 30cm){
         @page{
           margin: 0.5in;
@@ -324,9 +364,9 @@
     <div class="textinput">
        <h3>Type your message:</h3>
        <input type="text" id="preview-text" placeholder="type here...">
-       <button onclick="printText()" id="print-button" class="button">print</button>
+       <button onclick="printText()" id="print-button" class="button print-button">print</button>
        <!-- <button onclick="saveText()" id="save-button" class="button">save</button> -->
-       <button id="email-button" class="button">email font</button>
+       <button id="email-button" class="button print-button">email font</button>
      </div>
 
     <div class="slidecontainer">
@@ -336,15 +376,32 @@
       <br>
       <h3>Choose font:</h3>
       <div id="fonts_container">
-        <button id="font_craftwork" class="button buttonfont" onclick="changeFont('craftwork');">Craftwork Grotesk</button>
-        <button id="font_avara" class="button buttonfont" style="font-family: avara" onclick="changeFont('avara');">Avara</button>
-        <button id="font_garamondt" class="button buttonfont" style="font-family: garamondt; font-size: 1.3rem" onclick="changeFont('garamondt');">Garamond/t</button>
-        <button id="font_louise" class="button buttonfont" style="font-family: louise; font-size: 1.3rem" onclick="changeFont('louise');">Louise</button>
-        <button id="font_ft88" class="button buttonfont" style="font-family: ft88" onclick="changeFont('ft88');">FT88 School</button>
-        <button id="font_goozette" class="button buttonfont" style="font-family: goozette" onclick="changeFont('goozette');">Goozette</button>
+        <button id="font_craftwork" class="button buttonfont" onclick="changeFont('Craftwork');">Craftwork Grotesk</button>
+        <button id="font_avara" class="button buttonfont" style="font-family: avara" onclick="changeFont('Avara');">Avara</button>
+        <button id="font_garamondt" class="button buttonfont" style="font-family: garamondt; font-size: 1.3rem" onclick="changeFont('Garamondt');">Garamond/t</button>
+        <button id="font_louise" class="button buttonfont" style="font-family: louise; font-size: 1.3rem" onclick="changeFont('Louise');">Louise</button>
+        <button id="font_ft88" class="button buttonfont" style="font-family: ft88" onclick="changeFont('FT88');">FT88 School</button>
+        <button id="font_goozette" class="button buttonfont" style="font-family: goozette" onclick="changeFont('Goozette');">Goozette</button>
       </div>
       <!-- <div id="fontCredit"></div> -->
       <br>
+
+      <div id="email-popup">
+        <h3>Email font</h3>
+        <p>If you'd like to reuse your new font, give it a name and submit your email below to get the .otf file in your inbox! (Check your spam)</p>
+        <form id="email-form">
+          <p class="labelform">Font name:</p>
+          <input type="text" id="fontname-input" name="fontname-input" placeholder="my odd type">
+          <p class="labelform">Email:</p>
+          <input type="email" id="email-input" name="email-input" placeholder="yourname&#x263A;&#xFE0E;@mail.com">
+          <input type="submit" value="email font" id="email-send" class="button">
+          <button id="cancel-email" class="button">cancel</button>
+        </form>
+        
+        
+      </div>
+      <br>
+
       <!-- <input type="file" id="inputFont" style="display:none"/> -->
       <!-- <button id="inputfontbutton" class="button">upload .otf font</button> -->
       <!-- <div id="uploadedfile"></div> -->

@@ -121,16 +121,19 @@ async function main(){
         drawText(arrayId);
 }
 
+let currentfont;
 
 
 async function changeFont(typeface){
+    currentfont = typeface;
+
     switch(typeface){
-        case "craftwork": buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf'); break;
-        case "avara": buf = await fetch('assets/Avara-BoldItalic.otf'); break;
-        case "garamondt": buf = await fetch('assets/Garamondt-Regular.otf'); break;
-        case "louise": buf = await fetch('assets/Louise-Regular.otf'); break;
-        case "ft88": buf = await fetch('assets/FT88-School.otf'); break;
-        case "goozette": buf = await fetch('assets/Goozette.otf'); break;
+        case "Craftwork": buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf'); break;
+        case "Avara": buf = await fetch('assets/Avara-BoldItalic.otf'); break;
+        case "Garamondt": buf = await fetch('assets/Garamondt-Regular.otf'); break;
+        case "Louise": buf = await fetch('assets/Louise-Regular.otf'); break;
+        case "FT88": buf = await fetch('assets/FT88-School.otf'); break;
+        case "Goozette": buf = await fetch('assets/Goozette.otf'); break;
         default: buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf'); break;
     }
 
@@ -142,7 +145,7 @@ async function changeFont(typeface){
 
 // call first render of fonts
 // loadFonts();
-changeFont("avara");
+changeFont("Avara");
 // main();
 
 
@@ -413,13 +416,69 @@ function initEmailJS(){
 
 initEmailJS();
 
-document.getElementById("email-button").addEventListener("click", function(event){
+document.getElementById("email-button").addEventListener("click", function(){
+    document.getElementById("email-popup").style.transform = "translate(-50%, -50%) scale(1)"
+})
+document.getElementById("cancel-email").addEventListener("click", function(){
+    document.getElementById("email-popup").style.transform = "translate(-50%, -50%) scale(0)"
+})
+
+document.getElementById("email-form").addEventListener("submit", async function(event){
     event.preventDefault();
-    var templateparams = {
-        user_email: "guus-99@live.nl"
+
+    var email = document.getElementById("email-input").value;
+    var fontname = document.getElementById("fontname-input").value;
+
+    if(email.length > 0){
+    var currentDate = new Date();
+
+    if(fontname.length == 0){
+        fontname = `Odditype - ${currentDate.getDate()}${(currentDate.getMonth()+1)}${currentDate.getFullYear()} ${currentfont}`
+    }else{
+        fontname = `${fontname} - odditype`
     }
-    emailjs.send("service_hotmail", "template_font", templateparams).then(
+
+
+    const randomFont = new opentype.Font({
+            // familyName: 'Odditype - ' +currentDate.getDate()
+            //                         +(currentDate.getMonth()+1)
+            //                         +currentDate.getFullYear()
+            //             + " " + currentfont,
+            familyName: fontname,
+            styleName: `${currentfont} Shuffled`,
+            unitsPerEm: 1000,
+            ascender: 800,
+            descender: -200,
+            glyphs: allglyphs
+        })
+
+        console.log(randomFont)
+
+    var blob = new Blob([randomFont.toArrayBuffer()])
+    // var font_url = URL.createObjectURL(new Blob([randomFont.toArrayBuffer()]), {type: "font/opentype"})
+    
+    var fontfile = await blobToBase(blob)
+
+    console.log("send email")
+
+    emailjs.send("service_hotmail", "template_font", {
+        user_email: email,
+        font_name: fontname,
+        font_file: fontfile},
         (response) => {console.log("SUCCESS", response.status, response.text)},
         (error) => {console.log("FAILED...", error)}
     )
+    document.getElementById("email-input").value = "";
+    document.getElementById("email-popup").style.transform = "translate(-50%, -50%) scale(0)"
+    }
 })
+
+const blobToBase = blob => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    return new Promise(resolve => {
+        reader.onloadend = () => {
+            resolve(reader.result)
+        }
+    })
+}
