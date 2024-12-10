@@ -43,23 +43,25 @@ function createGlyphCanvasNew(glyph, size) {
     return ctx;
 }
 
-document.getElementById("inputfontbutton").addEventListener('click', () => {
-    document.querySelector('input[type="file"]').click();
-})
+// document.getElementById("inputfontbutton").addEventListener('click', () => {
+//     document.querySelector('input[type="file"]').click();
+// })
+let buf;
+let font;
 
 // -------------------------------------------
 // first function called once at the beginning
 async function main(){
 
     // const buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf')
-    const buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf')
-    const font = opentype.parse(await buf.arrayBuffer())
+    // buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf')
+    // font = opentype.parse(await buf.arrayBuffer())
 
-    let credit = document.getElementById("fontCredit");
-    credit.innerHTML = "<h3>Current font:</h3> Craftwork Grotesk Semibold"
+    // let credit = document.getElementById("fontCredit");
+    // credit.innerHTML = "<h3>Current font:</h3> Craftwork Grotesk Semibold"
 
-    let upload = document.getElementById("uploadedfile");
-    upload.innerHTML = "no file chosen";
+    // let upload = document.getElementById("uploadedfile");
+    // upload.innerHTML = "no file chosen";
 
     var value = slider.value;
 
@@ -119,8 +121,31 @@ async function main(){
         drawText(arrayId);
 }
 
+
+
+async function changeFont(typeface){
+    switch(typeface){
+        case "craftwork": buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf'); break;
+        case "avara": buf = await fetch('assets/Avara-BoldItalic.otf'); break;
+        case "garamondt": buf = await fetch('assets/Garamondt-Regular.otf'); break;
+        case "louise": buf = await fetch('assets/Louise-Regular.otf'); break;
+        case "ft88": buf = await fetch('assets/FT88-School.otf'); break;
+        case "goozette": buf = await fetch('assets/Goozette.otf'); break;
+        default: buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf'); break;
+    }
+
+    font = opentype.parse(await buf.arrayBuffer())
+    redoMain();
+}
+
+
+
 // call first render of fonts
-main();
+// loadFonts();
+changeFont("avara");
+// main();
+
+
 
 
 // ---------------------------------------------------------------------
@@ -128,7 +153,8 @@ main();
 var slider = document.getElementById("myRange");
 var removeButton = document.getElementById("removeButton");
 
-var fontInput
+
+// var fontInput
 let allglyphs = []
 
 async function redoMain(){
@@ -137,25 +163,35 @@ async function redoMain(){
     glyphdivs.forEach(glyphdiv => { glyphdiv.parentNode.parentNode.remove(); })
  
     allglyphs.length = 0;
-    fontInput = document.getElementById("inputFont").files;
-    var fontFile = document.getElementById("inputFont").files[0];
+    // fontInput = document.getElementById("inputFont").files;
+    // var fontFile = document.getElementById("inputFont").files[0];
     // console.log(fontFile);
-    let credit = document.getElementById("fontCredit");
-    let upload = document.getElementById("uploadedfile");
+    // let credit = document.getElementById("fontCredit");
+    // let upload = document.getElementById("uploadedfile");
     
     // const buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf')
-    if (fontInput.length > 0){
-         font = opentype.parse(await fontFile.arrayBuffer())
-         if(font.names.macintosh.fontFamily["en"] && font.names.macintosh.fontSubfamily["en"]){
-         credit.innerHTML = "<h3>Current font:</h3> " + font.names.macintosh.fontFamily["en"] + " " + font.names.macintosh.fontSubfamily["en"]; }
-         else{ credit.innerHTML = "<h3>Current font:</h3> " + fontFile.name }
-         upload.innerHTML = "File: " + fontFile.name
-    } else{
-         const buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf')
-         font = opentype.parse(await buf.arrayBuffer())
-         credit.innerHTML = "<h3>Current font:</h3> Craftwork Grotesk Semibold"
-         upload.innerHTML = "no file chosen";
-        } 
+    // if (fontInput.length > 0){
+    //      font = opentype.parse(await fontFile.arrayBuffer())
+    //      if(font.names.macintosh.fontFamily["en"] && font.names.macintosh.fontSubfamily["en"]){
+    //      credit.innerHTML = "<h3>Current font:</h3> " + font.names.macintosh.fontFamily["en"] + " " + font.names.macintosh.fontSubfamily["en"]; }
+    //      else{ credit.innerHTML = "<h3>Current font:</h3> " + fontFile.name }
+    //      upload.innerHTML = "File: " + fontFile.name
+    // } else{
+    // let buf;
+    // switch(typeface){
+    //     case "craftwork": buf = craftwork; break;
+    //     case "avara": buf = avara; break;
+    //     case "garamondt": buf = garamondt; break;
+    //     case "louise": buf = louise; break;
+    //     case "ft88": buf = ft88; break;
+    //     case "goozette": buf = goozette; break;
+    //     default: buf = craftwork; break;
+    // }
+        //  const buf = await fetch('assets/CraftworkGrotesk-SemiBold.otf')
+    // font = opentype.parse(await buf.arrayBuffer())
+    //      credit.innerHTML = "<h3>Current font:</h3> Craftwork Grotesk Semibold"
+    //      upload.innerHTML = "no file chosen";
+    //     } 
 
     var value = slider.value;
 
@@ -221,8 +257,8 @@ async function redoMain(){
 
 // listen for change in slider and call second function
 slider.addEventListener("change", redoMain, false);
-removeButton.addEventListener("click", redoMain, false);
-document.getElementById("inputFont").addEventListener("change", redoMain, false);
+// removeButton.addEventListener("click", redoMain, false);
+// document.getElementById("inputFont").addEventListener("change", redoMain, false);
 
 
 // slider.addEventListener("change", drawText, false);
@@ -251,10 +287,10 @@ function downloadFont(){
 
 }
 
-async function removeFont(){
-    document.getElementById("inputFont").value="";
-    redoMain();
-}
+// async function removeFont(){
+//     document.getElementById("inputFont").value="";
+//     redoMain();
+// }
 
 // typewriter
 var typewriter = document.getElementById('typewriter');
@@ -292,9 +328,9 @@ async function drawText (ai) {
     c.width = r.width * scale;
     c.height = r.height * scale;
     var prectx = c.getContext('2d');
-    prectx.fillStyle = "white";
-    prectx.fillRect(0,0, c.width, c.height);
-    prectx.fillStyle = "black"
+    // prectx.fillStyle = "white";
+    // prectx.fillRect(0,0, c.width, c.height);
+    // prectx.fillStyle = "black"
     prectx.scale(scale, scale);
     
     writeFont.draw(prectx, gPreviewText, 10, 50, 40, {kerning: false}); 
@@ -313,6 +349,19 @@ async function changePreviewText(e){
 }
 
 function printText(){
+
+    var date = new Date();
+    var currentdate = date.getTime()
+    // svg = printpath.toSVG({flipY: false});
+    var canvas = document.getElementById("typewriter");
+    var img = canvas.toDataURL("image/png");
+    var downloadLink = document.createElement("a");
+    downloadLink.href = img;
+    downloadLink.download = `demoday_odditype_${currentdate}.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
 
     svg = printpath.toSVG({flipY: false});
     // console.log(svg);
@@ -340,12 +389,14 @@ function printText(){
 }
 
 function saveText(){
+    var date = new Date();
+    var currentdate = date.getTime()
     // svg = printpath.toSVG({flipY: false});
     var canvas = document.getElementById("typewriter");
-    var img = canvas.toDataURL("image/jpeg", 1.0);
+    var img = canvas.toDataURL("image/png");
     var downloadLink = document.createElement("a");
     downloadLink.href = img;
-    downloadLink.download = "mymessage_odditype.jpeg";
+    downloadLink.download = `demoday_odditype_${currentdate}.png`;
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
@@ -355,3 +406,20 @@ function saveText(){
 
 document.getElementById('preview-text').addEventListener('input', changePreviewText)
 // drawText()
+
+function initEmailJS(){
+    emailjs.init({publicKey: "P_eRVj_sUmO6pSvk6"})
+}
+
+initEmailJS();
+
+document.getElementById("email-button").addEventListener("click", function(event){
+    event.preventDefault();
+    var templateparams = {
+        user_email: "guus-99@live.nl"
+    }
+    emailjs.send("service_hotmail", "template_font", templateparams).then(
+        (response) => {console.log("SUCCESS", response.status, response.text)},
+        (error) => {console.log("FAILED...", error)}
+    )
+})
