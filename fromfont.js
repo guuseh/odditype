@@ -316,6 +316,8 @@ var printpath;
 
 async function drawText (ai) { 
 
+    
+
     const writeFont = new opentype.Font({
         familyName: 'Write-generated',
         styleName: 'Print',
@@ -324,6 +326,29 @@ async function drawText (ai) {
         descender: -200,
         glyphs: allglyphs
     })
+
+    var unicodes_present = [];
+
+    console.log(writeFont.glyphs.glyphs)
+    for(let [key, value] of Object.entries(writeFont.glyphs.glyphs)){
+        unicodes_present.push(value.unicode)
+    }
+
+    let filteredText = [];
+
+    for(let char of gPreviewText){
+        const unicode = char.charCodeAt(0)
+        if(!unicodes_present.includes(unicode)){
+            filteredText.push('-')
+        }else{
+            filteredText.push(char)
+        }
+        // console.log(unicode)
+        // const match = writeFont.glyphs.flatMap(item => item.glyphs).filter(item => item.unicode == unicode)
+        // // const match = writeFont.glyphs.glyphs.find(unicode == unicode)
+        // // const match = writeFont.glyphs.filter(glyph => glyph.unicode == unicode)
+        // console.log(match)
+    }
 
     var c = typewriter;
     var r = c.getBoundingClientRect();
@@ -336,9 +361,12 @@ async function drawText (ai) {
     // prectx.fillStyle = "black"
     prectx.scale(scale, scale);
     
-    writeFont.draw(prectx, gPreviewText, 10, 50, 40, {kerning: false}); 
+    // writeFont.draw(prectx, gPreviewText, 10, 50, 40, {kerning: false}); 
+    writeFont.draw(prectx, filteredText, 10, 50, 40, {kerning: false}); 
 
-    printpath = writeFont.getPath(gPreviewText, 10, 50, 40, {kerning: false});
+    // printpath = writeFont.getPath(gPreviewText, 10, 50, 40, {kerning: false});
+    printpath = writeFont.getPath(filteredText, 10, 50, 40, {kerning: false});
+
     pathdata = printpath.toPathData({optimize: true, flipY: false})
     // console.log(pathdata);
 }
@@ -376,7 +404,7 @@ function printText(){
     windowContent += '<html>'
     windowContent += '<head><title>Print canvas</title></head>';
     windowContent += '<body style="margin: 0;">'
-    windowContent += '<svg width="1000" height="200" style="transform-origin: bottom left; transform: rotate(90.000001deg) translate(-230px, 625px) scale(5);">' + svg + '</svg>'
+    windowContent += '<svg width="1800" height="200" style="transform-origin: bottom left; transform: rotate(90.000001deg) translate(-230px, 625px) scale(5);">' + svg + '</svg>'
     // windowContent += '<img src="' + url + '" style="transform-origin: bottom left; transform: rotate(90.000001deg) translate(-80px, 0) scale(2.5); image-rendering: pixelated">';
     windowContent += '</body>';
     windowContent += '</html>';
@@ -386,7 +414,12 @@ function printText(){
     printWin.document.close();
     printWin.focus();
     printWin.print();
-    setTimeout(() => { printWin.close(); }, 10);
+    setTimeout(() => { 
+        printWin.close(); 
+        document.getElementById("preview-text").value = '';
+        gPreviewText = textArray[Math.round(Math.random()*(textArray.length-1))]
+        drawText();
+    }, 10);
     //printJS({printable:'typewriter', type:'html', maxWidth: 4000});
 
 }
