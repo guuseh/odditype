@@ -329,7 +329,6 @@ async function drawText (ai) {
 
     var unicodes_present = [];
 
-    console.log(writeFont.glyphs.glyphs)
     for(let [key, value] of Object.entries(writeFont.glyphs.glyphs)){
         unicodes_present.push(value.unicode)
     }
